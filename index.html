@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="author" content="TheJoseph98" />
+        <title>Song List Player</title>
+        <script src="lib/jquery-3.4.1.min.js"></script>
+        <script src="js/setup.js"></script>
+        <script src="js/display.js"></script>
+        <script src="js/search.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    </head>
+    <body onload="setup()">
+        <div id="slHeader">
+            <div id="slHeaderLeft">
+                <h1>AMQ Song List Player</h1>
+                <button id="slImportButton" class="btn btn-primary">Import</button>
+                <input id="slImport" type="file" name="slDataFile" accept="text/json" style="display: none;" />
+            </div>
+            <div id="slHeaderRight">
+                <div id="slHeaderSearch">
+                    <div class="slSearchContainer">
+                        <span>Song Name:</span>
+                        <input class="slSearchInput" id="slSearchSongName" placeholder="Search song name" type="text" />
+                    </div>
+                    <div class="slSearchContainer">
+                        <span>Artist:</span>
+                        <input class="slSearchInput" id="slSearchArtist" placeholder="Search artist" type="text" />
+                    </div>
+                    <div class="slSearchContainer">
+                        <span>Anime:</span>
+                        <input class="slSearchInput" id="slSearchAnime" placeholder="Search anime" type="text" />
+                    </div>
+                    <div id="slHeaderFilter">
+                        <span>Song Type</span>
+                        <div id="slHeaderTypeFilters">
+                            <div class="slTypeFilter">
+                                <div id="slTypeOpenings" class="filterCheckbox">
+                                    <label>&#10004;</label>
+                                </div>
+                                <span>Openings</span>
+                            </div>
+                            <div class="slTypeFilter">
+                                <div id="slTypeEndings" class="filterCheckbox">
+                                    <label>&#10004;</label>
+                                </div>
+                                <span>Endings</span>
+                            </div>
+                            <div class="slTypeFilter">
+                                <div id="slTypeInserts" class="filterCheckbox">
+                                    <label>&#10004;</label>
+                                </div>
+                                <span>Insert Songs</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="slAnimeTitleSelectContainer">
+                        <span>Anime Titles</span>
+                        <select id="slAnimeTitleSelect">
+                            <option value="english">English</option>
+                            <option value="romaji" selected>Romaji</option>
+                        </select>
+                    </div>
+                    <div id="slAutoPlayContainer">
+                        <div class="slAutoPlay">
+                            <div id="slAutoPlay" class="autoplayCheckbox">
+                                    <label>&#10004;</label>
+                            </div>
+                            <span>AutoPlay</span>
+                        </div>
+                    </div>
+                    <div id="slPlayOrderContainer">
+                        <span>Repeat</span>
+                        <select id="slRepeat">
+                            <option value="0" selected>off</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="99999999">infinite</option>
+                        </select>
+                    </div>
+                    <div id="slPlayOrderContainer">
+                        <span>Play Order</span>
+                        <select id="slPlayOrder">
+                            <option value="sequential" selected>Sequential</option>
+                            <option value="random">Random</option>
+                        </select>
+                    </div>
+                    <div id="slPlayOrderContainer">
+                        <span>Sample</span>
+                        <select id="slSample">
+                            <option value="all" selected>All</option>
+                            <option value="random">Random</option>
+                            <option value="start">Start</option>
+                            <option value="mid">Mid</option>
+                            <option value="end">End</option>
+                            <option value="recorded">Recorded</option>
+                        </select>
+                    </div>
+                    <div id="slPlayOrderContainer">
+                        <span>Length</span>
+                        <select id="slLength">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20" selected>20</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="slHeaderPlayer">
+                    <datalist id="slPlayerList">
+                        
+                    </datalist>
+                    <div class="slSearchContainer" id="slSearchPlayerNameContainer">
+                        <span>Player name: </span>
+                        <input autocomplete="on" list="slPlayerList" type="text" id="slPlayerName" class="slSearchInput" placeholder="Search player name">
+                    </div>
+
+                    <div id="slPlayerAnswerContainer">
+                        <div id="slPlayerCorrect" class="filterCheckbox">
+                            <label>&#10004;</label>
+                        </div>
+                        <span>Correct</span>
+                    </div>
+                    <div id="slPlayerCorrectContainer">
+                        <div id="slPlayerIncorrect" class="filterCheckbox">
+                            <label>&#10004;</label>
+                        </div>
+                        <span>Incorrect</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="slMain">
+            <div id="slScoreboard">
+                <div>
+                    <h3>Standings</h3>
+                </div>
+                <div id="slScoreboardContainer">
+                    
+                </div>
+            </div>
+            <div id="slTableContainer">
+                <div id="slTableHeader">
+                    <h2>Song List</h2>
+                </div>
+                <div id="slTableBody">
+                    <table id="slTable">
+                        <tr class="header">
+                            <td class="songNumber">Number</td>
+                            <td class="songName">Song Name</td>
+                            <td class="songArtist">Artist</td>
+                            <td class="animeNameRomaji" style="display: none;">Anime</td>
+                            <td class="animeNameEnglish">Anime</td>
+                            <td class="songType">Type</td>
+                            <td class="playerAnswer">Answer</td>
+                            <td class="guessesCounter">Guesses</td>
+                            <td class="samplePoint">Sample</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div id="slInfo">
+                <div id="slInfoHeader">
+                    <h2>Song Info</h2>
+                </div>
+                <div id="slInfoBody">
+                    <div class="slInfoRow">
+                        <div id="slInfoSongName">
+                            <h5>Song Name</h5>
+                        </div>
+                        <div id="slInfoArtist">
+                            <h5>Artist</h5>
+                        </div>
+                        <div id="slInfoType">
+                            <h5>Type</h5>
+                        </div>
+                    </div>
+                    <div class="slInfoRow">
+                        <div id="slInfoAnimeEnglish">
+                            <h5>Anime English</h5>
+                        </div>
+                        <div id="slInfoAnimeRomaji">
+                            <h5>Anime Romaji</h5>
+                        </div>
+                        <div id="slInfoSample">
+                            <h5>Sample Point</h5>
+                        </div>
+                    </div>
+                    <div class="slInfoRow">
+                        <div id="slInfoUrls">
+                            <h5>URLs</h5>
+                            <ul>
+                            
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="slInfoRow">
+                        <div id="slInfoGuessed">
+                            <h5>Guessed</h5>
+                        </div>
+                        <div id="slInfoFromList">
+                            <h5>From Lists</h5>
+                            <ul>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="player">
+               		<video id="videoPlayer"></video>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
