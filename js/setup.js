@@ -121,7 +121,7 @@ function convertJson(listdata) {
         listdata[i]=convertSong(listdata[i]);
 
 		for(let key in listdata[i].urls.catbox) {
-			listdata[i].urls.catbox[key] = 'https://nl.catbox.moe/' + listdata[i].urls.catbox[key];
+			listdata[i].urls.catbox[key] = 'https://ladist1.catbox.video/' + listdata[i].urls.catbox[key];
 		}
     }
     return listdata;
